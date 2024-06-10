@@ -1,36 +1,41 @@
+using Microsoft.EntityFrameworkCore;
+using ShiftsLoggerConsoleApp.Models;
+using ConfigurationManager = System.Configuration.ConfigurationManager;
 
-namespace ShiftsLoggerConsoleApp
+namespace ShiftsLoggerConsoleApp;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddControllers();
+        builder.Services.AddDbContext<ShiftLoggerDbContext>(options =>
         {
-            var builder = WebApplication.CreateBuilder(args);
+            // Retrieve the connection string from the configuration file
+            var connectionString = ConfigurationManager.ConnectionStrings["FlashCardDbContext"].ConnectionString;
 
-            // Add services to the container.
+            // Configure the DbContext to use SQL Server with the retrieved connection string
+            options.UseSqlServer(connectionString);
+        })
+        .AddEndpointsApiExplorer()
+        .AddSwaggerGen();
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+        var app = builder.Build();
 
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
+
+        app.UseHttpsRedirection();
+
+        app.UseAuthorization();
+
+        app.MapControllers();
+
+        app.Run();
     }
 }

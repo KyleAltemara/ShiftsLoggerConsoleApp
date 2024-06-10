@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftsLoggerConsoleApp", "ShiftsLoggerConsoleApp\ShiftsLoggerConsoleApp.csproj", "{580E628C-451D-4B17-A46B-F0BB0FE04F59}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftsLoggerAPI", "ShiftsLoggerConsoleApp\ShiftsLoggerAPI.csproj", "{580E628C-451D-4B17-A46B-F0BB0FE04F59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
