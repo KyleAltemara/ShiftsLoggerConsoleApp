@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShiftsLoggerConsoleApp.Models;
+using ShiftsLoggerAPI.Models;
 
-namespace ShiftsLoggerConsoleApp.Controllers;
+namespace ShiftsLoggerAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

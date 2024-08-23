@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ShiftsLoggerConsoleApp.Models;
+namespace ShiftsLoggerAPI.Models;
 
 public class ShiftLog
 {

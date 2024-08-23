@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using ShiftsLoggerConsoleApp.Models;
+using ShiftsLoggerAPI.Models;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
-namespace ShiftsLoggerConsoleApp;
+namespace ShiftsLoggerAPI;
 
 public class Program
 {

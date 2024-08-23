@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ShiftsLoggerConsoleApp.Models;
+namespace ShiftsLoggerAPI.Models;
 
 public class ShiftLoggerDbContext : DbContext
 {
