@@ -75,10 +75,7 @@ internal static class Menu
         }
 
         AnsiConsole.MarkupLine("Press [green]Enter[/] to retun to main menu.");
-        while (Console.ReadKey().Key != ConsoleKey.Enter)
-        {
-            ;
-        }
+        while (Console.ReadKey().Key != ConsoleKey.Enter) ;
     }
 
     private static async Task AddShift()
@@ -116,7 +113,55 @@ internal static class Menu
 
     private static async Task UpdateShift()
     {
-        throw new NotImplementedException();
+        var shifts = await ShiftController.GetAllShiftLogs();
+        var menuOptions = shifts.ToDictionary(shift => shift.ToString(), shift => shift.Id);
+        menuOptions.Add("Cancel", -1);
+        var choice = menuOptions[AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Choose a shift to update:")
+                .AddChoices(menuOptions.Keys))];
+
+        if (choice == -1)
+        {
+            return;
+        }
+
+        var shift = shifts.First(s => s.Id == choice);
+        const string firstNamePrompt = "Enter first name (or type 'c' to cancel, or press enter to not change the first name):";
+        var firstName = AnsiConsole.Ask(firstNamePrompt, defaultValue: shift.FirstName!).Trim();
+        if (UserCanceled(firstName))
+        {
+            return;
+        }
+
+        const string lastNamePrompt = "Enter last name (or type 'c' to cancel, or press enter to not change the last name):";
+        var lastName = AnsiConsole.Ask(lastNamePrompt, defaultValue: shift.LastName!).Trim();
+        if (UserCanceled(lastName))
+        {
+            return;
+        }
+
+        const string startDatePrompt = "Enter the date of work (yyyy-mm-dd) (or type 'c' to cancel, or press enter to not change the date):";
+        const string startTimePrompt = "Enter the start time of work (hh:mm) (or type 'c' to cancel, or press enter to not change the time):";
+        const string shiftHoursPrompt = "Enter the length of the shift in hours (or type 'c' to cancel, or press enter to not change the hours):";
+        double originalShiftHours = Math.Round((shift.ShiftEndTime - shift.ShiftStartTime).TotalHours, 2);
+        if (!TryPrompt(startDatePrompt, DateTime.TryParse, out DateTime date, shift.ShiftStartTime.Date.ToString("yyyy-MM-dd")) ||
+            !TryPrompt(startTimePrompt, DateTime.TryParse, out DateTime startTime, shift.ShiftStartTime.TimeOfDay.ToString(@"hh\:mm")) ||
+            !TryPrompt(shiftHoursPrompt, double.TryParse, out double shiftLength, originalShiftHours.ToString()))
+        {
+            return;
+        }
+
+        startTime = new DateTime(date.Year, date.Month, date.Day, startTime.Hour, startTime.Minute, 0);
+        var endTime = startTime.AddHours(shiftLength);
+        try
+        {
+            await ShiftController.UpdateShift(new ShiftLogDTO(choice, firstName, lastName, startTime, endTime));
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.Write(ex.Message);
+        }
     }
 
     private static async Task DeleteShift()
@@ -151,11 +196,11 @@ internal static class Menu
                     firstName.Equals("cancel", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool TryPrompt<T>(string prompt, TryParseHandler<T> tryParse, out T result)
+    private static bool TryPrompt<T>(string prompt, TryParseHandler<T> tryParse, out T result, string? defaultValue)
     {
         while (true)
         {
-            var input = AnsiConsole.Ask<string>(prompt);
+            string? input = defaultValue == null ? AnsiConsole.Ask<string>(prompt) : AnsiConsole.Ask(prompt, defaultValue);
             if (UserCanceled(input))
             {
                 result = default!;
@@ -170,6 +215,8 @@ internal static class Menu
             AnsiConsole.MarkupLine("[red]Invalid input format.[/]");
         }
     }
+
+    private static bool TryPrompt<T>(string prompt, TryParseHandler<T> tryParse, out T result) => TryPrompt(prompt, tryParse!, out result!, null);
 
     private delegate bool TryParseHandler<T>(string input, out T result);
 
