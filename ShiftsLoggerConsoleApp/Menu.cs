@@ -6,6 +6,9 @@ namespace ShiftsLoggerConsoleApp;
 
 internal static class Menu
 {
+    /// <summary>
+    /// Shows the menu and handles user input.
+    /// </summary>
     internal static async Task ShowMenuAsync()
     {
         AnsiConsole.WriteLine("Phone Book Console App");
@@ -44,6 +47,9 @@ internal static class Menu
         }
     }
 
+    /// <summary>
+    /// Lists all shifts and displays them in a table.
+    /// </summary>
     private static async Task ListShifts()
     {
         try
@@ -78,6 +84,9 @@ internal static class Menu
         while (Console.ReadKey().Key != ConsoleKey.Enter) ;
     }
 
+    /// <summary>
+    /// Adds a new shift to the shift logs.
+    /// </summary>
     private static async Task AddShift()
     {
         var firstName = AnsiConsole.Ask<string>("Enter first name (or type 'c' to cancel):").Trim();
@@ -111,6 +120,9 @@ internal static class Menu
         }
     }
 
+    /// <summary>
+    /// Updates an existing shift in the shift logs.
+    /// </summary>
     private static async Task UpdateShift()
     {
         var shifts = await ShiftController.GetAllShiftLogs();
@@ -164,6 +176,9 @@ internal static class Menu
         }
     }
 
+    /// <summary>
+    /// Deletes a shift from the shift logs.
+    /// </summary>
     private static async Task DeleteShift()
     {
         var shifts = await ShiftController.GetAllShiftLogs();
@@ -190,12 +205,18 @@ internal static class Menu
         }
     }
 
+    /// <summary>
+    /// Checks if the user canceled the operation.
+    /// </summary>
     private static bool UserCanceled(string firstName)
     {
         return firstName.Equals("c", StringComparison.OrdinalIgnoreCase) ||
                     firstName.Equals("cancel", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Prompts the user for input and tries to parse the result.
+    /// </summary>
     private static bool TryPrompt<T>(string prompt, TryParseHandler<T> tryParse, out T result, string? defaultValue)
     {
         while (true)
@@ -216,8 +237,17 @@ internal static class Menu
         }
     }
 
+    /// <summary>
+    /// Prompts the user for input and tries to parse the result.
+    /// </summary>
     private static bool TryPrompt<T>(string prompt, TryParseHandler<T> tryParse, out T result) => TryPrompt(prompt, tryParse!, out result!, null);
 
+    /// <summary>
+    /// Tries to parse the result from the user input.
+    /// </summary>
+    /// <typeparam name="T">The type of the result.</typeparam>
+    /// <param name="input">The input string.</param>
+    /// <param name="result">The parsed result.</param>
+    /// <returns>True if the input was successfully parsed; otherwise, false.</returns>
     private delegate bool TryParseHandler<T>(string input, out T result);
-
 }

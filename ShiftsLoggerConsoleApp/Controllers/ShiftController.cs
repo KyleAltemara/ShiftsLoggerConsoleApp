@@ -7,6 +7,10 @@ internal class ShiftController
 {
     private const string ShiftLoggerUri = "https://localhost:7264/api/ShiftLogs";
 
+    /// <summary>
+    /// Retrieves all shift logs.
+    /// </summary>
+    /// <returns>A collection of shift logs.</returns>
     internal static async Task<IEnumerable<ShiftLogDTO>> GetAllShiftLogs()
     {
         try
@@ -26,6 +30,11 @@ internal class ShiftController
         }
     }
 
+    /// <summary>
+    /// Retrieves a specific shift log by ID.
+    /// </summary>
+    /// <param name="id">The ID of the shift log to retrieve.</param>
+    /// <returns>The shift log with the specified ID, or null if not found.</returns>
     internal static async Task<ShiftLogDTO?> GetShiftLog(int id)
     {
         try
@@ -44,6 +53,11 @@ internal class ShiftController
         }
     }
 
+    /// <summary>
+    /// Adds a new shift log.
+    /// </summary>
+    /// <param name="shift">The shift log to add.</param>
+    /// <returns>True if the shift log was added successfully, false otherwise.</returns>
     internal static async Task<bool> AddShift(ShiftLogDTO shift)
     {
         try
@@ -62,6 +76,11 @@ internal class ShiftController
         }
     }
 
+    /// <summary>
+    /// Deletes a shift log by ID.
+    /// </summary>
+    /// <param name="id">The ID of the shift log to delete.</param>
+    /// <returns>True if the shift log was deleted successfully, false otherwise.</returns>
     internal static async Task<bool> DeleteShift(int id)
     {
         try
@@ -80,6 +99,11 @@ internal class ShiftController
         }
     }
 
+    /// <summary>
+    /// Updates a shift log.
+    /// </summary>
+    /// <param name="shift">The updated shift log.</param>
+    /// <returns>True if the shift log was updated successfully, false otherwise.</returns>
     internal static async Task<bool> UpdateShift(ShiftLogDTO shift)
     {
         try

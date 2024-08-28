@@ -4,6 +4,9 @@ namespace ShiftsLoggerAPI.Models;
 
 public class ShiftLoggerDbContext : DbContext
 {
+    /// <summary>
+    /// The <see cref="DbSet{TEntity}"/> of <see cref="ShiftLog"/> entities.
+    /// </summary>
     public DbSet<ShiftLog> ShiftLogs { get; set; } = null!;
 
     public ShiftLoggerDbContext(DbContextOptions<ShiftLoggerDbContext> options) : base(options)
