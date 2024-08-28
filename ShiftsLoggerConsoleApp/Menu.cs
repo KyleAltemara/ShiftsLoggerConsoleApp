@@ -1,7 +1,6 @@
 ﻿using Spectre.Console;
 using ShiftsLoggerAPI.Models;
 using ShiftsLoggerConsoleApp.Controllers;
-using Microsoft.CodeAnalysis.Elfie.Extensions;
 
 namespace ShiftsLoggerConsoleApp;
 
@@ -76,19 +75,38 @@ internal static class Menu
         }
 
         AnsiConsole.MarkupLine("Press [green]Enter[/] to retun to main menu.");
-        while (Console.ReadKey().Key != ConsoleKey.Enter) ;
+        while (Console.ReadKey().Key != ConsoleKey.Enter)
+        {
+            ;
+        }
     }
 
     private static async Task AddShift()
     {
+        var firstName = AnsiConsole.Ask<string>("Enter first name (or type 'c' to cancel):").Trim();
+        if (UserCanceled(firstName))
+        {
+            return;
+        }
+
+        var lastName = AnsiConsole.Ask<string>("Enter last name (or type 'c' to cancel):").Trim();
+        if (UserCanceled(lastName))
+        {
+            return;
+        }
+
+        if (!TryPrompt("Enter the date of work (YYYY-MM-dd) (or type 'c' to cancel):", DateTime.TryParse, out DateTime date) ||
+            !TryPrompt("Enter the start time of work (HH:mm) (or type 'c' to cancel):", DateTime.TryParse, out DateTime startTime) ||
+            !TryPrompt("Enter the length of the shift in hours (or type 'c' to cancel):", double.TryParse, out double shiftLength))
+        {
+            return;
+        }
+
+        startTime = new DateTime(date.Year, date.Month, date.Day, startTime.Hour, startTime.Minute, 0);
+        var endTime = startTime.AddHours(shiftLength);
         try
         {
-            //var firstName = AnsiConsole.Ask<string>("Enter first name:").Trim();
-            //var lastName = AnsiConsole.Ask<string>("Enter last name:").Trim();
-            //var startTime = AnsiConsole.Ask<DateTime>("Enter the start time of work. (YYYY-MM-dd HH:mm:ss)");
-            //var endTime = AnsiConsole.Ask<DateTime>("Enter the end time of work. (YYYY-MM-dd HH:mm:ss)");
-            //ShiftController.AddShift(new ShiftLogDTO(0, firstName, lastName, startTime, endTime));
-            await ShiftController.AddShift(new ShiftLogDTO(0, "John", "Doe", DateTime.Now, DateTime.Now.AddHours(8.123456)));
+            await ShiftController.AddShift(new ShiftLogDTO(0, firstName, lastName, startTime, endTime));
         }
         catch (Exception ex)
         {
@@ -126,4 +144,33 @@ internal static class Menu
             AnsiConsole.Write(ex.Message);
         }
     }
+
+    private static bool UserCanceled(string firstName)
+    {
+        return firstName.Equals("c", StringComparison.OrdinalIgnoreCase) ||
+                    firstName.Equals("cancel", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool TryPrompt<T>(string prompt, TryParseHandler<T> tryParse, out T result)
+    {
+        while (true)
+        {
+            var input = AnsiConsole.Ask<string>(prompt);
+            if (UserCanceled(input))
+            {
+                result = default!;
+                return false;
+            }
+
+            if (tryParse(input, out result))
+            {
+                return true;
+            }
+
+            AnsiConsole.MarkupLine("[red]Invalid input format.[/]");
+        }
+    }
+
+    private delegate bool TryParseHandler<T>(string input, out T result);
+
 }
