@@ -1,5 +1,7 @@
 ﻿using Spectre.Console;
 using ShiftsLoggerAPI.Models;
+using ShiftsLoggerConsoleApp.Controllers;
+using Microsoft.CodeAnalysis.Elfie.Extensions;
 
 namespace ShiftsLoggerConsoleApp;
 
@@ -54,10 +56,16 @@ internal static class Menu
             table.AddColumn("Last Name");
             table.AddColumn("Start Time");
             table.AddColumn("End Time");
+            table.AddColumn("Hours Worked");
 
             foreach (var shift in shifts)
             {
-                table.AddRow(shift.Id.ToString(), shift.FirstName, shift.LastName, shift.ShiftStartTime.ToString(), shift.ShiftEndTime.ToString());
+                table.AddRow(shift.Id.ToString(),
+                             shift.FirstName!,
+                             shift.LastName!,
+                             shift.ShiftStartTime.ToString("yyyy-mm-dd hh:mm"),
+                             shift.ShiftEndTime.ToString("yyyy-mm-dd hh:mm"),
+                             Math.Round((shift.ShiftEndTime - shift.ShiftStartTime).TotalHours, 2).ToString() + " hours");
             }
 
             AnsiConsole.Write(table);
@@ -66,6 +74,9 @@ internal static class Menu
         {
             AnsiConsole.Write(ex.Message);
         }
+
+        AnsiConsole.MarkupLine("Press [green]Enter[/] to retun to main menu.");
+        while (Console.ReadKey().Key != ConsoleKey.Enter) ;
     }
 
     private static async Task AddShift()
@@ -77,7 +88,7 @@ internal static class Menu
             //var startTime = AnsiConsole.Ask<DateTime>("Enter the start time of work. (YYYY-MM-dd HH:mm:ss)");
             //var endTime = AnsiConsole.Ask<DateTime>("Enter the end time of work. (YYYY-MM-dd HH:mm:ss)");
             //ShiftController.AddShift(new ShiftLogDTO(0, firstName, lastName, startTime, endTime));
-            await ShiftController.AddShift(new ShiftLogDTO(0, "John", "Doe", DateTime.Now, DateTime.Now.AddHours(8)));
+            await ShiftController.AddShift(new ShiftLogDTO(0, "John", "Doe", DateTime.Now, DateTime.Now.AddHours(8.123456)));
         }
         catch (Exception ex)
         {
