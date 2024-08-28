@@ -1,10 +1,9 @@
-﻿namespace ShiftsLoggerConsoleApp
+﻿namespace ShiftsLoggerConsoleApp;
+
+internal class Program
 {
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello, World!");
-        }
+        Task.Run(Menu.ShowMenuAsync).GetAwaiter().GetResult();
     }
 }

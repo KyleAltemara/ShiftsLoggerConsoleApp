@@ -9,47 +9,46 @@ using ShiftsLoggerAPI.Models;
 
 #nullable disable
 
-namespace ShiftsLoggerAPI.Migrations
+namespace ShiftsLoggerAPI.Migrations;
+
+[DbContext(typeof(ShiftLoggerDbContext))]
+[Migration("20240823205906_InitialCreate")]
+partial class InitialCreate
 {
-    [DbContext(typeof(ShiftLoggerDbContext))]
-    [Migration("20240823205906_InitialCreate")]
-    partial class InitialCreate
+    /// <inheritdoc />
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+        modelBuilder
+            .HasAnnotation("ProductVersion", "8.0.8")
+            .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+        SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ShiftsLoggerAPI.Models.ShiftLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("ShiftsLoggerAPI.Models.ShiftLog", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("FirstName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("LastName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ShiftEndTime")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ShiftEndTime")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ShiftStartTime")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ShiftStartTime")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("ShiftLogs");
-                });
+                b.ToTable("ShiftLogs");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }
