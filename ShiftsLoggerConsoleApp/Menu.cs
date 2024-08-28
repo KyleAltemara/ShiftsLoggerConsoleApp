@@ -103,6 +103,27 @@ internal static class Menu
 
     private static async Task DeleteShift()
     {
-        throw new NotImplementedException();
+        var shifts = await ShiftController.GetAllShiftLogs();
+        var menuOptions = shifts.ToDictionary(shift => shift.ToString(), shift => shift.Id);
+        menuOptions.Add("Cancel", -1);
+        var choice = menuOptions[AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Choose a shift to delete:")
+                .AddChoices(menuOptions.Keys))];
+        if (choice == -1)
+        {
+            return;
+        }
+
+        try
+        {
+            await ShiftController.DeleteShift(choice);
+            AnsiConsole.MarkupLine("Shift deleted successfully.");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine("Failed to delete shift.");
+            AnsiConsole.Write(ex.Message);
+        }
     }
 }
