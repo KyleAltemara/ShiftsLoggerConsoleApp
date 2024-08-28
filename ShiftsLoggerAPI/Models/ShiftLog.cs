@@ -37,4 +37,10 @@ public class ShiftLogDTO
         ShiftStartTime = shiftStartTime;
         ShiftEndTime = shiftEndTime;
     }
+
+    public override string ToString() => $"ID: {Id}, " +
+                                         $"Name: {FirstName} {LastName}, " +
+                                         $"Start Time: {ShiftStartTime}, " +
+                                         $"End Time: {ShiftEndTime}, " +
+                                         $"Hours: {Math.Round((ShiftEndTime - ShiftStartTime).TotalHours, 2)}";
 }
